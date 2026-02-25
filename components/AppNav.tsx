@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { isAdmin } from "@/lib/utils";
-import { Home, User, Shield, LogOut, Search, MessageCircle, Users } from "lucide-react";
+import { Home, User, Shield, LogOut, Search, MessageCircle, Users, AlertTriangle } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 
 interface Profile {
@@ -24,8 +25,10 @@ export default function AppNav({
     const pathname = usePathname();
     const admin = isAdmin(userEmail);
     const { lang, setLang, t } = useLang();
+    const [confirming, setConfirming] = useState(false);
 
-    async function handleSignOut() {
+    async function performSignOut() {
+        setConfirming(false);
         const supabase = createClient();
         await supabase.auth.signOut();
         router.push("/");
@@ -43,6 +46,7 @@ export default function AppNav({
 
     return (
         <aside
+            className="app-nav"
             style={{
                 width: 240,
                 flexShrink: 0,
@@ -140,13 +144,68 @@ export default function AppNav({
                             }}
                         >
                             {icon}
-                            {label}
+                            <span className="nav-label">{label}</span>
                         </Link>
                     );
                 })}
+
+                {/* Mobile-only sign-out tab (shows in bottom bar) */}
+                <button
+                    className="signout-tab"
+                    onClick={() => setConfirming(true)}
+                    title={t.signOut}
+                    style={{
+                        all: "unset",
+                        cursor: "pointer",
+                        fontFamily: "inherit",
+                    }}
+                >
+                    <LogOut size={16} />
+                    <span className="nav-label">{t.signOut}</span>
+                </button>
             </nav>
 
-            {/* User + Sign Out */}
+            {/* ── Desktop sign-out block (hidden on mobile) ── */}
+            <div className="desktop-signout">
+                {/* Sign-out button */}
+                {!confirming ? (
+                    <button
+                        className="desktop-signout-btn"
+                        onClick={() => setConfirming(true)}
+                    >
+                        <LogOut size={15} />
+                        <span>{t.signOut}</span>
+                    </button>
+                ) : (
+                    /* Confirmation panel */
+                    <div className="desktop-signout-confirm">
+                        <div className="desktop-signout-confirm-header">
+                            <AlertTriangle size={14} />
+                            <span>
+                                {lang === "ar"
+                                    ? "هل أنت متأكد من تسجيل الخروج؟"
+                                    : "Are you sure you want to sign out?"}
+                            </span>
+                        </div>
+                        <div className="desktop-signout-confirm-actions">
+                            <button
+                                className="desktop-signout-yes"
+                                onClick={performSignOut}
+                            >
+                                {lang === "ar" ? "نعم، اخرج" : "Yes, sign out"}
+                            </button>
+                            <button
+                                className="desktop-signout-cancel"
+                                onClick={() => setConfirming(false)}
+                            >
+                                {lang === "ar" ? "إلغاء" : "Cancel"}
+                            </button>
+                        </div>
+                    </div>
+                )}
+            </div>
+
+            {/* User info row */}
             <div
                 style={{
                     borderTop: "1px solid #1c1c1f",
@@ -188,15 +247,6 @@ export default function AppNav({
                         {userEmail}
                     </p>
                 </div>
-
-                <button
-                    onClick={handleSignOut}
-                    className="btn btn-ghost"
-                    style={{ padding: "0.35rem", flexShrink: 0, border: "none" }}
-                    title={t.signOut}
-                >
-                    <LogOut size={14} />
-                </button>
             </div>
         </aside>
     );

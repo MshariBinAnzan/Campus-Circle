@@ -40,6 +40,7 @@ export default async function RightSidebar() {
 
     return (
         <aside
+            className="right-sidebar"
             style={{
                 width: 260,
                 flexShrink: 0,

@@ -11,6 +11,7 @@ export default async function LandingPage() {
     <main style={{ minHeight: "100vh", display: "flex" }}>
       {/* ── LEFT: Logo Panel ── */}
       <div
+        className="landing-hero"
         style={{
           flex: "0 0 42%",
           background: "linear-gradient(145deg, #1e1b4b 0%, #312e81 40%, #6366f1 80%, #a855f7 100%)",
@@ -73,6 +74,7 @@ export default async function LandingPage() {
 
       {/* ── RIGHT: Content Panel ── */}
       <div
+        className="landing-content"
         style={{
           flex: 1,
           display: "flex",
