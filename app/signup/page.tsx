@@ -68,7 +68,7 @@ export default function SignupPage() {
     }
 
     return (
-        <AuthShell title="Create account" subtitle={`University of Madinah students only`}>
+        <AuthShell title="Create account" subtitle={`Gmail users only`}>
             {done ? (
                 <div className="animate-fade-up" style={{ textAlign: "center" }}>
                     <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>📬</div>

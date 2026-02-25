@@ -119,10 +119,10 @@ export default async function LandingPage() {
         >
           A verified social space exclusively for{" "}
           <strong style={{ color: "var(--text)" }}>
-            University of Madinah
+            Gmail users
           </strong>{" "}
-          students. Share ideas, connect with classmates, and stay in the loop —
-          all behind your institutional email.
+          — share ideas, connect with friends, and stay in the loop,
+          all behind your Google email.
         </p>
 
         {/* Feature pills */}
@@ -189,7 +189,7 @@ export default async function LandingPage() {
             opacity: 0.6,
           }}
         >
-          Only @student.um.edu.sa emails are accepted.
+          Only @gmail.com emails are accepted.
         </p>
       </div>
     </main>
