@@ -16,7 +16,6 @@ export default async function AppLayout({
         redirect("/login");
     }
 
-    // Fetch profile
     const { data: profile } = await supabase
         .from("profiles")
         .select("*")
@@ -28,18 +27,20 @@ export default async function AppLayout({
             style={{
                 minHeight: "100vh",
                 display: "flex",
-                flexDirection: "column",
                 background: "var(--surface)",
             }}
         >
-            <AppNav profile={profile} userEmail={user.email ?? ""} />
+            {/* ── Left Sidebar ── */}
+            <AppNav profile={profile} userEmail={user.email ?? ""} userId={user.id} />
+
+            {/* ── Main Content ── */}
             <main
                 style={{
                     flex: 1,
-                    maxWidth: 760,
+                    maxWidth: 720,
                     width: "100%",
-                    marginInline: "auto",
-                    padding: "1.5rem 1rem 4rem",
+                    padding: "1.75rem 1.5rem 4rem",
+                    marginLeft: 0,
                 }}
             >
                 {children}

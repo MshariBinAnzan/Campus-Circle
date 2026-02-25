@@ -121,7 +121,7 @@ export default function LoginPage() {
                             type="email"
                             required
                             className="input"
-                            placeholder="you@student.um.edu.sa"
+                            placeholder="you@gmail.com"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                         />
