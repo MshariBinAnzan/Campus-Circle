@@ -43,18 +43,34 @@ export default function ReportsClient({
     async function deletePost(reportId: string, postId: string) {
         if (!confirm("Permanently delete this post? This cannot be undone.")) return;
         setProcessing(reportId);
-        const res = await fetch("/api/admin/delete-post", {
-            method: "DELETE",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ postId }),
-        });
-        if (res.ok) {
-            // Remove all reports for this post from the list
-            setReports((prev) => prev.filter((r) => r.post?.id !== postId));
-        } else {
-            const { error } = await res.json();
-            alert("Failed to delete post: " + error);
+
+        try {
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), 10000);
+
+            const res = await fetch("/api/admin/delete-post", {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ postId }),
+                signal: controller.signal,
+            });
+            clearTimeout(timeout);
+
+            if (res.ok) {
+                setReports((prev) => prev.filter((r) => r.post?.id !== postId));
+            } else {
+                let msg = `HTTP ${res.status}`;
+                try { const j = await res.json(); msg = j.error ?? msg; } catch { /* ignore */ }
+                alert("Delete failed: " + msg + "\n\nMake sure you ran supabase_migration_v4.sql in Supabase.");
+            }
+        } catch (err) {
+            if (err instanceof Error && err.name === "AbortError") {
+                alert("Request timed out. Check your Supabase setup.");
+            } else {
+                alert("Network error. Are you connected?");
+            }
         }
+
         setProcessing(null);
     }
 
