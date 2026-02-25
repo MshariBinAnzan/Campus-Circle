@@ -1,17 +1,35 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Cairo:wght@400;500;600;700;800;900&display=swap');
 
-/* ── CSS Variables: Grey/Black Theme ─────────────────────────── */
+/* ── CSS Variables: Dark Bluish-Grey / Near-Black Theme ──────── */
 :root {
-  --surface: #09090b;
-  --surface-2: #111113;
-  --surface-3: #1c1c1f;
-  --glass-bg: rgba(20, 20, 22, 0.85);
-  --glass-border: rgba(255, 255, 255, 0.06);
-  --border: #27272a;
-  --text: #f4f4f5;
-  --text-muted: #71717a;
-  --brand: #a1a1aa;
-  --brand-hover: #e4e4e7;
+  /* Surfaces — very dark, with a faint navy/indigo undertone */
+  --surface: #0b0c14;
+  /* base page background                   */
+  --surface-2: #0f1020;
+  /* slightly lighter surface (cards, panels)*/
+  --surface-3: #181928;
+  /* borders, dividers, hover states         */
+
+  /* Glass card */
+  --glass-bg: rgba(15, 16, 32, 0.88);
+  /* dark navy-tinted glass */
+  --glass-border: rgba(100, 110, 200, 0.10);
+  /* subtle indigo rim      */
+
+  /* Borders */
+  --border: #1f2138;
+  /* indigo-tinged dark border */
+
+  /* Text */
+  --text: #eeeef2;
+  /* near-white, slightly cool */
+  --text-muted: #6b6d8a;
+  /* muted slate-indigo        */
+
+  /* Brand accent — soft indigo glow */
+  --brand: #7c7fa8;
+  --brand-hover: #b4b6d4;
+
   --radius: 12px;
 }
 
@@ -52,12 +70,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #27272a;
+  background: #252640;
   border-radius: 99px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #3f3f46;
+  background: #363763;
 }
 
 /* ── Glass Card ─────────────────────────────────────────────── */
@@ -73,8 +91,8 @@ body {
 }
 
 .glass-hover:hover {
-  border-color: rgba(255, 255, 255, 0.12);
-  background: rgba(28, 28, 31, 0.9);
+  border-color: rgba(100, 110, 200, 0.18);
+  background: rgba(18, 20, 44, 0.92);
 }
 
 /* ── Buttons ─────────────────────────────────────────────────── */
@@ -101,25 +119,25 @@ body {
 }
 
 .btn-primary {
-  background: #f4f4f5;
-  color: #09090b;
+  background: #eeeef2;
+  color: #0b0c14;
   border-color: transparent;
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: #e4e4e7;
+  background: #d8d9e8;
 }
 
 .btn-ghost {
   background: transparent;
   color: var(--text-muted);
-  border-color: #27272a;
+  border-color: var(--border);
 }
 
 .btn-ghost:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(100, 110, 200, 0.06);
   color: var(--text);
-  border-color: #3f3f46;
+  border-color: #363763;
 }
 
 .btn-danger {
@@ -136,8 +154,8 @@ body {
 .input {
   width: 100%;
   padding: 0.6rem 0.85rem;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid #27272a;
+  background: rgba(100, 110, 200, 0.04);
+  border: 1px solid var(--border);
   border-radius: 10px;
   color: var(--text);
   font-size: 0.9rem;
@@ -151,8 +169,8 @@ body {
 }
 
 .input:focus {
-  border-color: #52525b;
-  box-shadow: 0 0 0 3px rgba(161, 161, 170, 0.1);
+  border-color: #4c4e82;
+  box-shadow: 0 0 0 3px rgba(100, 110, 200, 0.12);
 }
 
 /* ── Badges ─────────────────────────────────────────────────── */
@@ -186,14 +204,14 @@ body {
 }
 
 .badge-brand {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(100, 110, 200, 0.08);
   color: var(--text);
-  border: 1px solid #3f3f46;
+  border: 1px solid var(--border);
 }
 
 /* ── Gradient text ───────────────────────────────────────────── */
 .gradient-text {
-  background: linear-gradient(135deg, #e4e4e7 0%, #71717a 100%);
+  background: linear-gradient(135deg, #b4b6d4 0%, #6b6d8a 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;

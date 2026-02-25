@@ -26,6 +26,16 @@ export const translations = {
         // Top posts
         topToday: "Top Posts Today",
         noTopPosts: "No posts today yet",
+        // FAQ
+        faqTitle: "FAQ",
+        faqQ1: "Why can't I sign up with Gmail?",
+        faqA1: "Only verified Almaarefa University students with a valid @student.um.edu.sa email address can create an account.",
+        faqQ2: "How do I report a post?",
+        faqA2: "Tap the ⋯ menu on any post and select 'Report'. Our moderation team will review it within 24 hours.",
+        faqQ3: "How can I enter clubs?",
+        faqA3: "You can enter by searching the club you want and request to join, then the leader will decide whether to accept or not.",
+        faqQ4: "How do I update my profile?",
+        faqA4: "Click your avatar in the bottom-left navigation bar, then select 'Edit Profile' to change your name, bio, or avatar.",
         // Post actions
         like: "Like",
         comment: "Comment",
@@ -122,10 +132,20 @@ export const translations = {
         backToFeed: "→ العودة إلى المنشورات",
         noPosts: "لا يوجد شيء هنا بعد",
         beFirst: "كن أول من ينشر!",
-        searchPlaceholder: "ابحث عن منشورات وأشخاص…",
+        searchPlaceholder: "ابحث عن منشورات و أشخاص…",
         // Top posts
-        topToday: "أفضل منشورات اليوم",
+        topToday: "افضل بوستات لليوم",
         noTopPosts: "لا توجد منشورات اليوم بعد",
+        // FAQ
+        faqTitle: "الاسئلة الشائعة",
+        faqQ1: "لماذا لا أستطيع التسجيل ببريد Gmail؟",
+        faqA1: "يمكن فقط لطلاب جامعة المعارف المعتمدين الذين يمتلكون بريدًا إلكترونيًا صحيحًا بنهاية @student.um.edu.sa إنشاء حساب.",
+        faqQ2: "كيف أبلغ عن منشور؟",
+        faqA2: "اضغط على قائمة ⋯ في أي منشور واختر 'إبلاغ'. سيراجعه فريق الإشراف خلال 24 ساعة.",
+        faqQ3: "كيف يمكنني الانضمام للنوادي؟",
+        faqA3: "يمكنك الانضمام عن طريق البحث عن النادي الذي تريده وطلب الانضمام، ثم يقرر القائد قبولك من عدمه.",
+        faqQ4: "كيف أحدّث ملفي الشخصي؟",
+        faqA4: "انقر على صورتك في شريط التنقل واختر 'تعديل الملف الشخصي' لتغيير اسمك أو صورتك.",
         // Post actions
         like: "إعجاب",
         comment: "تعليق",
@@ -221,21 +241,26 @@ const LangContext = createContext<LangContextType>({
     t: translations.en,
 });
 
+// Applies lang/dir directly to the <html> element (client-only, called after mount)
+function applyLang(l: Lang) {
+    document.documentElement.lang = l;
+    document.documentElement.dir = l === "ar" ? "rtl" : "ltr";
+}
+
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
     const [lang, setLangState] = useState<Lang>("en");
+    const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
+        // Mark as mounted FIRST, then load the saved language.
+        // This ensures the initial client render matches the server render (lang='en').
         const saved = localStorage.getItem("lang") as Lang | null;
         if (saved === "ar" || saved === "en") {
             applyLang(saved);
             setLangState(saved);
         }
+        setMounted(true);
     }, []);
-
-    function applyLang(l: Lang) {
-        document.documentElement.lang = l;
-        document.documentElement.dir = l === "ar" ? "rtl" : "ltr";
-    }
 
     function setLang(l: Lang) {
         setLangState(l);
@@ -243,8 +268,16 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
         applyLang(l);
     }
 
+    // Before mount: always serve English so the client matches the server's SSR output.
+    // After mount: serve the real saved language.
+    const value = {
+        lang: mounted ? lang : "en" as Lang,
+        setLang,
+        t: mounted ? translations[lang] : translations.en,
+    };
+
     return (
-        <LangContext.Provider value={{ lang, setLang, t: translations[lang] }}>
+        <LangContext.Provider value={value}>
             {children}
         </LangContext.Provider>
     );

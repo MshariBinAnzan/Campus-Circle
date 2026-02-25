@@ -1,5 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
+import FaqSection from "@/components/FaqSection";
+import SidebarTopPostsHeader from "@/components/SidebarTopPostsHeader";
 
 type TopPost = {
     id: string;
@@ -66,9 +68,7 @@ export default async function RightSidebar() {
                     }}
                 >
                     <span style={{ fontSize: "1rem" }}>🔥</span>
-                    <h3 style={{ fontWeight: 800, fontSize: "0.82rem", color: "#e4e4e7", letterSpacing: "0.04em", textTransform: "uppercase" }}>
-                        Top Posts Today
-                    </h3>
+                    <SidebarTopPostsHeader />
                 </div>
 
                 {posts.length === 0 ? (
@@ -180,6 +180,9 @@ export default async function RightSidebar() {
                     ))}
                 </div>
             </div>
+
+            {/* FAQ section */}
+            <FaqSection />
         </aside>
     );
 }

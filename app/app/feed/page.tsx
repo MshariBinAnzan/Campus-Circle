@@ -3,8 +3,7 @@ import type { Metadata } from "next";
 import CreatePost from "@/components/CreatePost";
 import PostCard from "@/components/PostCard";
 import RightSidebar from "@/components/RightSidebar";
-import Link from "next/link";
-import { Search } from "lucide-react";
+import FeedSearchBar from "@/components/FeedSearchBar";
 
 export const metadata: Metadata = { title: "Feed — CampusCircle" };
 export const dynamic = "force-dynamic";
@@ -38,26 +37,7 @@ export default async function FeedPage() {
             {/* ── Main feed column ── */}
             <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: "1rem" }}>
                 {/* Search bar */}
-                <Link
-                    href="/app/search"
-                    style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "0.65rem",
-                        padding: "0.7rem 1rem",
-                        background: "rgba(255,255,255,0.03)",
-                        border: "1px solid #27272a",
-                        borderRadius: 12,
-                        color: "#52525b",
-                        fontSize: "0.875rem",
-                        textDecoration: "none",
-                        cursor: "text",
-                        transition: "border-color 0.15s",
-                    }}
-                >
-                    <Search size={15} />
-                    Search posts and people…
-                </Link>
+                <FeedSearchBar />
 
                 <CreatePost userId={user!.id} />
 
