@@ -32,8 +32,8 @@ export default async function LandingPage() {
         <div style={{ position: "relative", zIndex: 1, textAlign: "center" }}>
           <div
             style={{
-              width: 100,
-              height: 100,
+              width: 120,
+              height: 120,
               borderRadius: 28,
               background: "rgba(255,255,255,0.15)",
               backdropFilter: "blur(20px)",
@@ -41,12 +41,17 @@ export default async function LandingPage() {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              fontSize: "3rem",
               margin: "0 auto 1.5rem",
               boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
+              padding: "0.9rem",
             }}
           >
-            🎓
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/logo_um.png"
+              alt="Almaarefa University"
+              style={{ width: "100%", height: "100%", objectFit: "contain", filter: "brightness(0) invert(1)" }}
+            />
           </div>
           <h1
             style={{
@@ -185,7 +190,7 @@ export default async function LandingPage() {
               textAlign: "center",
             }}
           >
-            Only @gmail.com emails are accepted.
+            Only @student.um.edu.sa emails are accepted.
           </p>
         </div>
       </div>

@@ -73,21 +73,19 @@ export default function AppNav({
                     padding: "0 0.5rem",
                 }}
             >
-                <div
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                    src="/logo_um.png"
+                    alt="Almaarefa University"
                     style={{
                         width: 32,
                         height: 32,
-                        borderRadius: 9,
-                        background: "#f4f4f5",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        fontSize: "1rem",
+                        objectFit: "cover",
+                        objectPosition: "left center",
                         flexShrink: 0,
+                        borderRadius: 6,
                     }}
-                >
-                    🎓
-                </div>
+                />
                 <span style={{ fontWeight: 800, fontSize: "0.95rem", color: "#f4f4f5", letterSpacing: "-0.01em" }}>
                     {t.appName}
                 </span>
