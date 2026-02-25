@@ -19,13 +19,11 @@ export default function MessagesPage() {
     const supabase = createClient();
     const [conversations, setConversations] = useState<Conversation[]>([]);
     const [loading, setLoading] = useState(true);
-    const [myId, setMyId] = useState("");
 
     useEffect(() => {
         async function load() {
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) return;
-            setMyId(user.id);
 
             // Get all messages involving me
             const { data: msgs } = await supabase

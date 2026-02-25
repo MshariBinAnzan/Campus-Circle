@@ -3,15 +3,12 @@
 export const dynamic = "force-dynamic";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { isAllowedEmail, ALLOWED_DOMAIN } from "@/lib/utils";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 
 export default function SignupPage() {
-    const router = useRouter();
-
     const [email, setEmail] = useState("");
     const [displayName, setDisplayName] = useState("");
     const [password, setPassword] = useState("");

@@ -15,7 +15,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
     return (
         <div style={{ minHeight: "100vh", display: "flex", background: "var(--surface)" }}>
-            <AppNav profile={profile} userEmail={user.email ?? ""} userId={user.id} />
+            <AppNav profile={profile} userEmail={user.email ?? ""} />
             <main style={{ flex: 1, minWidth: 0, padding: "1.75rem 1.5rem 4rem", overflowX: "hidden" }}>
                 {children}
             </main>

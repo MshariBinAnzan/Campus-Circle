@@ -16,11 +16,9 @@ interface Profile {
 export default function AppNav({
     profile,
     userEmail,
-    userId,
 }: {
     profile: Profile | null;
     userEmail: string;
-    userId: string;
 }) {
     const router = useRouter();
     const pathname = usePathname();
