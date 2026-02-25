@@ -2,19 +2,10 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import AppNav from "@/components/AppNav";
 
-export default async function AppLayout({
-    children,
-}: {
-    children: React.ReactNode;
-}) {
+export default async function AppLayout({ children }: { children: React.ReactNode }) {
     const supabase = await createClient();
-    const {
-        data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-        redirect("/login");
-    }
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) redirect("/login");
 
     const { data: profile } = await supabase
         .from("profiles")
@@ -23,26 +14,9 @@ export default async function AppLayout({
         .single();
 
     return (
-        <div
-            style={{
-                minHeight: "100vh",
-                display: "flex",
-                background: "var(--surface)",
-            }}
-        >
-            {/* ── Left Sidebar ── */}
+        <div style={{ minHeight: "100vh", display: "flex", background: "var(--surface)" }}>
             <AppNav profile={profile} userEmail={user.email ?? ""} userId={user.id} />
-
-            {/* ── Main Content ── */}
-            <main
-                style={{
-                    flex: 1,
-                    maxWidth: 720,
-                    width: "100%",
-                    padding: "1.75rem 1.5rem 4rem",
-                    marginLeft: 0,
-                }}
-            >
+            <main style={{ flex: 1, minWidth: 0, padding: "1.75rem 1.5rem 4rem", overflowX: "hidden" }}>
                 {children}
             </main>
         </div>

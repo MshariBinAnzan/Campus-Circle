@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
-import { CheckCircle, XCircle, Loader2 } from "lucide-react";
+import { CheckCircle, XCircle, Loader2, Trash2 } from "lucide-react";
 
 type Status = "pending" | "reviewed" | "dismissed";
 
@@ -37,6 +37,24 @@ export default function ReportsClient({
         setReports((prev) =>
             prev.map((r) => (r.id === id ? { ...r, status } : r))
         );
+        setProcessing(null);
+    }
+
+    async function deletePost(reportId: string, postId: string) {
+        if (!confirm("Permanently delete this post? This cannot be undone.")) return;
+        setProcessing(reportId);
+        const res = await fetch("/api/admin/delete-post", {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ postId }),
+        });
+        if (res.ok) {
+            // Remove all reports for this post from the list
+            setReports((prev) => prev.filter((r) => r.post?.id !== postId));
+        } else {
+            const { error } = await res.json();
+            alert("Failed to delete post: " + error);
+        }
         setProcessing(null);
     }
 
@@ -95,6 +113,7 @@ export default function ReportsClient({
                         report={report}
                         processing={processing === report.id}
                         onAction={updateStatus}
+                        onDelete={deletePost}
                     />
                 ))
             )}
@@ -106,10 +125,12 @@ function ReportRow({
     report,
     processing,
     onAction,
+    onDelete,
 }: {
     report: Report;
     processing: boolean;
     onAction: (id: string, status: "reviewed" | "dismissed") => void;
+    onDelete: (reportId: string, postId: string) => void;
 }) {
     const timeStr = new Date(report.created_at).toLocaleDateString("en-SA", {
         month: "short",
@@ -144,49 +165,67 @@ function ReportRow({
                     </p>
                 </div>
 
-                {/* Actions (only for pending) */}
-                {report.status === "pending" && (
-                    <div style={{ display: "flex", gap: "0.4rem", flexShrink: 0 }}>
+                {/* Actions */}
+                <div style={{ display: "flex", gap: "0.4rem", flexShrink: 0 }}>
+                    {report.status === "pending" && (
+                        <>
+                            <button
+                                onClick={() => onAction(report.id, "reviewed")}
+                                disabled={processing}
+                                className="btn"
+                                style={{
+                                    padding: "0.3rem 0.7rem",
+                                    fontSize: "0.78rem",
+                                    gap: "0.35rem",
+                                    background: "rgba(34,197,94,0.12)",
+                                    color: "#4ade80",
+                                    border: "1px solid rgba(34,197,94,0.25)",
+                                }}
+                                title="Mark reviewed"
+                            >
+                                {processing ? <Loader2 size={13} className="animate-spin" /> : <CheckCircle size={13} />}
+                                Reviewed
+                            </button>
+                            <button
+                                onClick={() => onAction(report.id, "dismissed")}
+                                disabled={processing}
+                                className="btn"
+                                style={{
+                                    padding: "0.3rem 0.7rem",
+                                    fontSize: "0.78rem",
+                                    gap: "0.35rem",
+                                    background: "rgba(156,163,175,0.1)",
+                                    color: "#9ca3af",
+                                    border: "1px solid rgba(156,163,175,0.2)",
+                                }}
+                                title="Dismiss"
+                            >
+                                <XCircle size={13} />
+                                Dismiss
+                            </button>
+                        </>
+                    )}
+                    {/* Delete post — always visible for admins */}
+                    {report.post && (
                         <button
-                            onClick={() => onAction(report.id, "reviewed")}
+                            onClick={() => onDelete(report.id, report.post!.id)}
                             disabled={processing}
                             className="btn"
                             style={{
                                 padding: "0.3rem 0.7rem",
                                 fontSize: "0.78rem",
                                 gap: "0.35rem",
-                                background: "rgba(34,197,94,0.12)",
-                                color: "#4ade80",
-                                border: "1px solid rgba(34,197,94,0.25)",
+                                background: "rgba(239,68,68,0.12)",
+                                color: "#f87171",
+                                border: "1px solid rgba(239,68,68,0.25)",
                             }}
-                            title="Mark reviewed"
+                            title="Delete post permanently"
                         >
-                            {processing ? (
-                                <Loader2 size={13} className="animate-spin" />
-                            ) : (
-                                <CheckCircle size={13} />
-                            )}
-                            Reviewed
+                            {processing ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} />}
+                            Delete Post
                         </button>
-                        <button
-                            onClick={() => onAction(report.id, "dismissed")}
-                            disabled={processing}
-                            className="btn"
-                            style={{
-                                padding: "0.3rem 0.7rem",
-                                fontSize: "0.78rem",
-                                gap: "0.35rem",
-                                background: "rgba(156,163,175,0.1)",
-                                color: "#9ca3af",
-                                border: "1px solid rgba(156,163,175,0.2)",
-                            }}
-                            title="Dismiss"
-                        >
-                            <XCircle size={13} />
-                            Dismiss
-                        </button>
-                    </div>
-                )}
+                    )}
+                </div>
             </div>
 
             {/* Post preview */}

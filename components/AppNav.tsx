@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { isAdmin } from "@/lib/utils";
-import { Home, User, Shield, LogOut, Search, MessageCircle } from "lucide-react";
+import { Home, User, Shield, LogOut, Search, MessageCircle, Users } from "lucide-react";
+import { useLang } from "@/lib/i18n";
 
 interface Profile {
     id: string;
@@ -24,6 +25,7 @@ export default function AppNav({
     const router = useRouter();
     const pathname = usePathname();
     const admin = isAdmin(userEmail);
+    const { lang, setLang, t } = useLang();
 
     async function handleSignOut() {
         const supabase = createClient();
@@ -33,11 +35,12 @@ export default function AppNav({
     }
 
     const navItems = [
-        { href: "/app/feed", icon: <Home size={18} />, label: "Feed" },
-        { href: "/app/search", icon: <Search size={18} />, label: "Search" },
-        { href: "/app/messages", icon: <MessageCircle size={18} />, label: "Messages" },
-        ...(profile ? [{ href: `/app/profile/${profile.id}`, icon: <User size={18} />, label: "Profile" }] : []),
-        ...(admin ? [{ href: "/app/mod/reports", icon: <Shield size={18} />, label: "Moderation" }] : []),
+        { href: "/app/feed", icon: <Home size={18} />, label: t.feed },
+        { href: "/app/search", icon: <Search size={18} />, label: t.search },
+        { href: "/app/messages", icon: <MessageCircle size={18} />, label: t.messages },
+        { href: "/app/clubs", icon: <Users size={18} />, label: t.clubs },
+        ...(profile ? [{ href: `/app/profile/${profile.id}`, icon: <User size={18} />, label: t.profile }] : []),
+        ...(admin ? [{ href: "/app/mod/reports", icon: <Shield size={18} />, label: t.moderation }] : []),
     ];
 
     return (
@@ -51,10 +54,9 @@ export default function AppNav({
                 display: "flex",
                 flexDirection: "column",
                 padding: "1.5rem 1rem",
-                borderRight: "1px solid var(--border)",
-                background: "rgba(15,15,26,0.95)",
-                backdropFilter: "blur(16px)",
-                gap: "0.25rem",
+                borderRight: "1px solid #1c1c1f",
+                background: "#0c0c0e",
+                gap: "0.15rem",
             }}
         >
             {/* Logo */}
@@ -64,17 +66,17 @@ export default function AppNav({
                     display: "flex",
                     alignItems: "center",
                     gap: "0.65rem",
-                    marginBottom: "1.75rem",
+                    marginBottom: "1.5rem",
                     textDecoration: "none",
                     padding: "0 0.5rem",
                 }}
             >
                 <div
                     style={{
-                        width: 34,
-                        height: 34,
-                        borderRadius: 10,
-                        background: "linear-gradient(135deg,#6366f1,#a855f7)",
+                        width: 32,
+                        height: 32,
+                        borderRadius: 9,
+                        background: "#f4f4f5",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
@@ -84,13 +86,39 @@ export default function AppNav({
                 >
                     🎓
                 </div>
-                <span style={{ fontWeight: 800, fontSize: "1rem", letterSpacing: "-0.01em" }}>
-                    CampusCircle
+                <span style={{ fontWeight: 800, fontSize: "0.95rem", color: "#f4f4f5", letterSpacing: "-0.01em" }}>
+                    {t.appName}
                 </span>
             </Link>
 
+            {/* Language toggle */}
+            <button
+                onClick={() => setLang(lang === "en" ? "ar" : "en")}
+                style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                    padding: "0.4rem 0.85rem",
+                    borderRadius: 10,
+                    fontSize: "0.78rem",
+                    fontWeight: 700,
+                    cursor: "pointer",
+                    background: "rgba(255,255,255,0.04)",
+                    border: "1px solid #27272a",
+                    color: "#71717a",
+                    marginBottom: "0.75rem",
+                    fontFamily: "inherit",
+                    transition: "all 0.15s",
+                    letterSpacing: "0.02em",
+                    textTransform: "uppercase",
+                }}
+            >
+                <span style={{ fontSize: "1rem" }}>{lang === "en" ? "🇸🇦" : "🇺🇸"}</span>
+                {lang === "en" ? "عربي" : "English"}
+            </button>
+
             {/* Nav Links */}
-            <nav style={{ flex: 1, display: "flex", flexDirection: "column", gap: "0.15rem" }}>
+            <nav style={{ flex: 1, display: "flex", flexDirection: "column", gap: "0.1rem" }}>
                 {navItems.map(({ href, icon, label }) => {
                     const active = pathname === href || pathname.startsWith(href + "/");
                     return (
@@ -102,17 +130,18 @@ export default function AppNav({
                                 alignItems: "center",
                                 gap: "0.75rem",
                                 padding: "0.65rem 0.85rem",
-                                borderRadius: 12,
-                                fontSize: "0.9rem",
+                                borderRadius: 10,
+                                fontSize: "0.875rem",
                                 fontWeight: active ? 700 : 500,
-                                color: active ? "#fff" : "var(--text-muted)",
-                                background: active ? "linear-gradient(135deg,rgba(99,102,241,0.25),rgba(168,85,247,0.15))" : "transparent",
-                                border: active ? "1px solid rgba(99,102,241,0.25)" : "1px solid transparent",
+                                color: active ? "#f4f4f5" : "#52525b",
+                                background: active ? "#1c1c1f" : "transparent",
+                                border: "1px solid transparent",
+                                borderColor: active ? "#27272a" : "transparent",
                                 transition: "all 0.15s",
                                 textDecoration: "none",
                             }}
                         >
-                            <span style={{ color: active ? "var(--brand)" : "inherit" }}>{icon}</span>
+                            {icon}
                             {label}
                         </Link>
                     );
@@ -122,46 +151,42 @@ export default function AppNav({
             {/* User + Sign Out */}
             <div
                 style={{
-                    borderTop: "1px solid var(--border)",
+                    borderTop: "1px solid #1c1c1f",
                     paddingTop: "1rem",
                     display: "flex",
                     alignItems: "center",
                     gap: "0.65rem",
                 }}
             >
-                {/* Avatar */}
-                {profile?.avatar_url ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                        src={profile.avatar_url}
-                        alt=""
-                        style={{ width: 34, height: 34, borderRadius: "50%", objectFit: "cover", border: "2px solid var(--brand)", flexShrink: 0 }}
-                    />
-                ) : (
-                    <div
-                        style={{
-                            width: 34,
-                            height: 34,
-                            borderRadius: "50%",
-                            background: "linear-gradient(135deg,#6366f1,#a855f7)",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            fontSize: "0.85rem",
-                            fontWeight: 700,
-                            color: "#fff",
-                            flexShrink: 0,
-                        }}
-                    >
-                        {(profile?.display_name ?? userEmail)[0].toUpperCase()}
-                    </div>
-                )}
+                <div
+                    style={{
+                        width: 32,
+                        height: 32,
+                        borderRadius: "50%",
+                        background: "#27272a",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: "0.8rem",
+                        fontWeight: 700,
+                        color: "#e4e4e7",
+                        flexShrink: 0,
+                        overflow: "hidden",
+                    }}
+                >
+                    {profile?.avatar_url ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={profile.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                    ) : (
+                        (profile?.display_name ?? userEmail)[0].toUpperCase()
+                    )}
+                </div>
 
                 <div style={{ flex: 1, minWidth: 0 }}>
-                    <p style={{ margin: 0, fontWeight: 700, fontSize: "0.82rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                    <p style={{ margin: 0, fontWeight: 700, fontSize: "0.8rem", color: "#e4e4e7", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                         {profile?.display_name ?? "User"}
                     </p>
-                    <p style={{ margin: 0, fontSize: "0.7rem", color: "var(--text-muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                    <p style={{ margin: 0, fontSize: "0.68rem", color: "#52525b", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                         {userEmail}
                     </p>
                 </div>
@@ -169,8 +194,8 @@ export default function AppNav({
                 <button
                     onClick={handleSignOut}
                     className="btn btn-ghost"
-                    style={{ padding: "0.35rem", flexShrink: 0 }}
-                    title="Sign out"
+                    style={{ padding: "0.35rem", flexShrink: 0, border: "none" }}
+                    title={t.signOut}
                 >
                     <LogOut size={14} />
                 </button>
