@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { isAdmin } from "@/lib/utils";
-import { Home, User, Shield, LogOut, Search, MessageCircle, Users, AlertTriangle } from "lucide-react";
+import { Home, User, Shield, LogOut, Search, MessageCircle, Users, BookOpen, AlertTriangle } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 
 interface Profile {
@@ -38,6 +38,7 @@ export default function AppNav({
     const navItems = [
         { href: "/app/feed", icon: <Home size={18} />, label: t.feed },
         { href: "/app/search", icon: <Search size={18} />, label: t.search },
+        { href: "/app/courses", icon: <BookOpen size={18} />, label: t.courses },
         { href: "/app/messages", icon: <MessageCircle size={18} />, label: t.messages },
         { href: "/app/clubs", icon: <Users size={18} />, label: t.clubs },
         ...(profile ? [{ href: `/app/profile/${profile.id}`, icon: <User size={18} />, label: t.profile }] : []),
