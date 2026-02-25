@@ -107,7 +107,7 @@ export const translations = {
     },
     ar: {
         // Nav
-        appName: "كامبوس سيركل",
+        appName: "CampusCircle",
         feed: "المنشورات",
         search: "البحث",
         messages: "الرسائل",

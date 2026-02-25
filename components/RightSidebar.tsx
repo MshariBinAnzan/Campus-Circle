@@ -142,33 +142,41 @@ export default async function RightSidebar() {
                 )}
             </div>
 
-            {/* Quick links */}
+            {/* Academics links */}
             <div
                 className="glass"
                 style={{ borderRadius: 14, padding: "0.9rem 1rem" }}
             >
-                <h3 style={{ fontWeight: 800, fontSize: "0.78rem", color: "#52525b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "0.65rem" }}>
-                    Quick Links
+                <h3 style={{ fontWeight: 800, fontSize: "0.78rem", color: "#52525b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "0.75rem" }}>
+                    🎓 Academics
                 </h3>
-                <div style={{ display: "flex", flexDirection: "column", gap: "0.35rem" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.1rem" }}>
                     {[
-                        { href: "/app/clubs", label: "🏛️ Browse Clubs" },
-                        { href: "/app/search", label: "🔍 Find People" },
-                        { href: "/app/messages", label: "✉️ Messages" },
+                        { href: "https://lms.um.edu.sa/my/", label: "📚 LMS" },
+                        { href: "https://portal.um.edu.sa/mcst/init", label: "🏛️ Portal" },
+                        { href: "https://www.um.edu.sa/", label: "🌐 College" },
                     ].map(({ href, label }) => (
-                        <Link
+                        <a
                             key={href}
                             href={href}
+                            target="_blank"
+                            rel="noopener noreferrer"
                             style={{
-                                fontSize: "0.82rem",
-                                color: "#71717a",
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "0.5rem",
+                                fontSize: "0.85rem",
+                                color: "#a1a1aa",
                                 textDecoration: "none",
-                                padding: "0.3rem 0",
-                                transition: "color 0.12s",
+                                padding: "0.55rem 0.65rem",
+                                borderRadius: 9,
+                                transition: "background 0.12s, color 0.12s",
                             }}
+                            className="glass-hover"
                         >
                             {label}
-                        </Link>
+                            <span style={{ marginInlineStart: "auto", fontSize: "0.65rem", color: "#3f3f46" }}>↗</span>
+                        </a>
                     ))}
                 </div>
             </div>
